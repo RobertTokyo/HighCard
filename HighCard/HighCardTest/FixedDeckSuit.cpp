@@ -19,10 +19,10 @@ Card* FixedDeckSuit::select()
 	return new SuitedCard{ (Suit)NextSuit, NextCard++};
 }
 
-std::unique_ptr<SuitedCard> FixedDeckSuit::SelectCardSafe()
+std::shared_ptr<SuitedCard> FixedDeckSuit::SelectCardSafe()
 {
 	SuitedCard* pCard = (SuitedCard*)select();
-	std::unique_ptr<SuitedCard> p(pCard);
+	std::shared_ptr<SuitedCard> p(pCard);
 
 	return p;
 }

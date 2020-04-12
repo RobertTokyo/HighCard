@@ -14,7 +14,7 @@ public:
 
 	virtual Card* select();
 
-	virtual std::unique_ptr<SuitedCard> SelectCardSafe();
+	virtual std::shared_ptr<SuitedCard> SelectCardSafe();
 
 protected:
 	size_t CardCount;

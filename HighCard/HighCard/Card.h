@@ -1,50 +1,67 @@
 #pragma once
 
-enum class HighCardRes { Win, Lose, Draw, Voided };
+#include "CardUtils.h"
 
 class Card
 {
 public:
 	Card(size_t value)
 		:CardValue{ value } {};
-	virtual ~Card() {};
+	Card(const Card& other)
+		: CardValue{ other.GetCardValue()}
+	{};
 
-	virtual HighCardRes compare(const Card& other) const
+	Card operator=(const Card& other)
+	{	
+		CardValue = other.GetCardValue();
+		return *this;
+	};
+
+	virtual ~Card() = default;
+
+	virtual int compare(const Card& other) const
 	{
-		HighCardRes res = HighCardRes::Voided;
 		size_t OtherValue = other.GetCardValue();
-		if (OtherValue == CardValue)
-			res = HighCardRes::Draw;
-		else if (OtherValue > CardValue)
-			res = HighCardRes::Lose;
-		else
-			res = HighCardRes::Win;
 
-		return res;
+		return (int)CardValue - (int)OtherValue;
 	}
 	size_t GetCardValue() const { return CardValue; }
 protected:
-	const size_t CardValue;
+	size_t CardValue;
 };
 
-enum class Suit { Spades, Clubs, Diamonds, Hearts };
+
 class SuitedCard : public Card
 {
 public:
 	SuitedCard(Suit suit, size_t value)
-		:Card{ value }
+		: CardSuit{ suit },
+		Card{ value }
 	{};
 
-	virtual ~SuitedCard();
+	SuitedCard(const SuitedCard& other)
+	:Card{ other.GetCardValue()},
+		CardSuit{ other.GetCardSuit()}
+	{};
 
-	Suit GetCardSuit() { return CardSuit; }
-
-	virtual HighCardRes compare(const Card& other) const
+	SuitedCard operator=(const SuitedCard& other)
 	{
-		HighCardRes res = Card::compare(other);
-		if (res == HighCardRes::Draw)
-		{
+		CardValue = other.GetCardValue();
+		CardSuit = other.GetCardSuit();
+		return *this;
+	};
+	virtual ~SuitedCard() = default;
 
+	Suit GetCardSuit() const { return CardSuit; }
+
+	virtual int compare(const SuitedCard& other) const
+	{
+		int res = Card::compare(other);
+		if (res == 0)
+		{
+			size_t MyRank = GetSuitRank(CardSuit);
+			size_t OtherRank = GetSuitRank(other.GetCardSuit());
+			res = (int)MyRank - (int)OtherRank;
 		}
 		return res;
 	}
