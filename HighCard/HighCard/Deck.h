@@ -13,7 +13,10 @@ public:
 	Deck()
 		: wildcard{ nullptr }
 	{};
-	virtual ~Deck() = default;
+	virtual ~Deck() {
+		if (wildcard != nullptr)
+			delete wildcard;
+	};
 
 	virtual Card* select() = 0;
 	

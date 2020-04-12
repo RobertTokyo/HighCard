@@ -4,34 +4,40 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Deck.h"
+#include "HighCard.h"
 
-class HighCard
+void HighCard::Reset()
 {
-public:
-	HighCard()
-		:mpDeck{ nullptr }// = default;
-	{};
+	for (Deck* pDeck : mpDecks)
+	{
+		delete pDeck;
+	}
+	mpDecks.clear();
+}
 
-	~HighCard() = default;
+Deck* HighCard::getFirstDeck()
+{
+	Deck* pDeck{ nullptr };
+	if (mpDecks.size() == 0) {
+		Deck* pDeck = new UnlimitedDeckNoSuit;
+		mpDecks.push_back(pDeck);
+	}
+	else
+		pDeck = mpDecks[0];
 
-	bool Play();
-
-	void SetDeck(Deck* deck) { mpDeck = deck; }
-
-protected:
-	Deck* mpDeck;
-};
+	return pDeck;
+}
 
 // This was the original game
-inline bool HighCard::Play()
+bool HighCard::Play()
 {
 	/* Select cards
 	int i = rand() % 52 + 1;
 	int j = rand() % 52 + 1; */
-	if(mpDeck==nullptr)
-		mpDeck = new UnlimitedDeckNoSuit;
-	auto p1 = ((UnlimitedDeckNoSuit*)mpDeck)->SelectCardSafe();
-	auto p2 = ((UnlimitedDeckNoSuit*)mpDeck)->SelectCardSafe();
+	Deck* pDeck = getFirstDeck();
+
+	auto p1 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	auto p2 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
 	/* Compare cards
 	return (i < j);
 	*/
@@ -39,18 +45,68 @@ inline bool HighCard::Play()
 	return comp > 0;
 }
 
-int main(int argc, char **argv)
+// Task 1. Support ties when the face value of the cards are the same.
+HighCardRes HighCard::PlayCanTie()
 {
-	HighCard card;
+	Deck* pDeck = getFirstDeck();
 
-	if (card.Play())
-	{
-		std::cout << "win\n";
-	}
-	else
-	{
-		std::cout << "lose\n";
-	}
-
-	return 0;
+	auto p1 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	auto p2 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	int comp = p1->compare(*p2);
+	HighCardRes res{ HighCardRes::Lose };
+	if (comp == 0)
+		res = HighCardRes::Draw;
+	else if (comp > 0)
+		res = HighCardRes::Win;
+	return res;
 }
+
+// Task 2. Allow for the ties to be resolved as a win by giving the different
+// suits precedence.
+HighCardRes HighCard::PlaySuitPrecedence()
+{
+	Deck* pDeck = getFirstDeck();
+	auto p1 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	auto p2 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	int comp = p1->compare(*p2);
+
+	HighCardRes res{ HighCardRes::Lose };
+	if (comp == 0)
+	{
+		res = HighCardRes::Draw;
+	}
+	else if (comp > 0)
+		res = HighCardRes::Win;
+	return res;
+}
+
+HighCardRes HighCard::PlayMultiDecks()
+{
+	HighCardRes res{ HighCardRes::Lose };
+	return res;
+}
+
+HighCardRes HighCard::PlayCanNeverTie()
+{
+	Deck* pDeck = getFirstDeck();
+	auto p1 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	auto p2 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	int comp = p1->compare(*p2);
+
+	HighCardRes res{ HighCardRes::Lose };
+	return res;
+}
+
+HighCardRes HighCard::PlayWithWildcard()
+{
+	HighCardRes res{ HighCardRes::Lose };
+	return res;
+}
+
+HighCardRes HighCard::PlayVarDecks()
+{
+	HighCardRes res{ HighCardRes::Lose };
+	return res;
+}
+
+// End of file
