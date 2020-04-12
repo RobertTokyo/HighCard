@@ -158,9 +158,9 @@ void PlaySuitPrecedence()
 void PlayMultiDecks()
 {
 	card.Reset();
-	Deck* deck1 = new LimitedDeckSuit{ 52 };
+	LimitedDeckSuit* deck1 = new LimitedDeckSuit{ 52 };
 	card.AddDeck(deck1);
-	Deck* deck2 = new LimitedDeckSuit{ 52 };
+	LimitedDeckSuit* deck2 = new LimitedDeckSuit{ 52 };
 	card.AddDeck(deck2);
 
 	HighCardRes res = card.PlayMultiDecks();
@@ -183,7 +183,7 @@ void PlayMultiDecks()
 
 void PlayCanNeverTie()
 {
-	Deck* deck1 = new LimitedDeckSuit{ 52 };
+	LimitedDeckSuit* deck1 = new LimitedDeckSuit{ 52 };
 	card.SetDeck(deck1);
 	HighCardRes res = card.PlayCanNeverTie();
 	switch (res)
@@ -205,7 +205,7 @@ void PlayCanNeverTie()
 
 void PlayWithWildcard()
 {
-	Deck* deck = new LimitedDeckSuit{ 52 };
+	LimitedDeckSuit* deck = new LimitedDeckSuit{ 52 };
 	card.SetDeck(deck);
 	Card* pWildcard = new SuitedCard{ Suit::Diamonds, 7 };
 
@@ -231,7 +231,7 @@ void PlayWithWildcard()
 
 void PlayVarDecks()
 {
-	Deck* deck = new LimitedDeckSuit{ 20 };
+	LimitedDeckSuit* deck = new LimitedDeckSuit{ 20 };
 	card.SetDeck(deck);
 
 	HighCardRes res = card.PlayVarDecks();

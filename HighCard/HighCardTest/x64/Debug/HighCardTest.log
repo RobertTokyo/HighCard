@@ -1,0 +1,10 @@
+﻿  pch.cpp
+  CardRepository.cpp
+  CardUtils.cpp
+  FixedDeckSuit.cpp
+  HighCardTest.cpp
+  TestCard.cpp
+  TestDeck.cpp
+  Generating Code...
+     Creating library D:\MyCode\Striata\HighCard\HighCard\x64\Debug\HighCardTest.lib and object D:\MyCode\Striata\HighCard\HighCard\x64\Debug\HighCardTest.exp
+  HighCardTest.vcxproj -> D:\MyCode\Striata\HighCard\HighCard\x64\Debug\HighCardTest.dll

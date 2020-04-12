@@ -35,6 +35,11 @@ public:
 		wildcard = wild;
 	};
 
+	virtual Card* getWildCard()
+	{
+		return wildcard;
+	};
+
 protected:
 	Card* wildcard;
 };

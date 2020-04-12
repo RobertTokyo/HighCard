@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-class Deck;
+class LimitedDeckSuit;
 
 enum class HighCardRes { Win, Lose, Draw, Voided };
 
@@ -28,12 +28,12 @@ public:
 	HighCardRes PlayWithWildcard();
 	HighCardRes PlayVarDecks();
 
-	void SetDeck(Deck* deck) { mpDecks.clear();  mpDecks.push_back(deck); }
-	void AddDeck(Deck* deck) { mpDecks.push_back(deck); }
+	void SetDeck(LimitedDeckSuit* deck) { mpDecks.clear();  mpDecks.push_back(deck); }
+	void AddDeck(LimitedDeckSuit* deck) { mpDecks.push_back(deck); }
 
 protected:
-	Deck*	getFirstDeck();
-	std::vector<Deck*> mpDecks;
+	LimitedDeckSuit*				getFirstDeck();
+	std::vector<LimitedDeckSuit*>	mpDecks;
 };
 
 // End of file
