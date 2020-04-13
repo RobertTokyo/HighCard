@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CardUtils.h"
+#include <iostream>
 
 class Card
 {
@@ -22,8 +23,14 @@ public:
 	virtual int compare(const Card& other) const
 	{
 		size_t OtherValue = other.GetCardValue();
+		std::cout << "Compare cards this card=" << CardValue << ", Other card=" << OtherValue << std::endl;
+		int res = (int)CardValue - (int)OtherValue;
+		return res;
+	}
 
-		return (int)CardValue - (int)OtherValue;
+	bool operator< (const Card &other) const
+	{
+		return (other.GetCardValue() < CardValue);
 	}
 	size_t GetCardValue() const { return CardValue; }
 protected:
@@ -64,6 +71,18 @@ public:
 			res = (int)MyRank - (int)OtherRank;
 		}
 		return res;
+	}
+	bool operator< (const Card &other) const
+	{
+		if (other.GetCardValue() < CardValue)
+			return true;
+		else
+		{
+			const SuitedCard* sc = dynamic_cast<const SuitedCard*>(&other);
+			if(sc!=nullptr)
+				return (int)CardSuit < (int)(sc->GetCardSuit());
+		}
+		return false;
 	}
 protected:
 	Suit CardSuit;

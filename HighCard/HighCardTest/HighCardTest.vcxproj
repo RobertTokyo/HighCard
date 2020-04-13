@@ -164,7 +164,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\HighCard\CardRepository.cpp" />
     <ClCompile Include="..\HighCard\CardUtils.cpp" />
     <ClCompile Include="FixedDeckSuit.cpp" />
     <ClCompile Include="HighCardTest.cpp" />

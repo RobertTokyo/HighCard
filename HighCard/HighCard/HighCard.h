@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Card.h"
 
 class LimitedDeckSuit;
 
@@ -32,6 +33,8 @@ public:
 	void AddDeck(LimitedDeckSuit* deck) { mpDecks.push_back(deck); }
 
 protected:
+	std::shared_ptr<Card>			getCardAlways(LimitedDeckSuit* pDeck);
+
 	LimitedDeckSuit*				getFirstDeck();
 	std::vector<LimitedDeckSuit*>	mpDecks;
 };

@@ -7,7 +7,7 @@ FixedDeckSuit::~FixedDeckSuit()
 		delete wildcard;
 };
 
-Card* FixedDeckSuit::select()
+Card* FixedDeckSuit::selectRaw()
 {
 	if (NextCard > CardCount)
 	{
@@ -19,10 +19,3 @@ Card* FixedDeckSuit::select()
 	return new SuitedCard{ (Suit)NextSuit, NextCard++};
 }
 
-std::shared_ptr<SuitedCard> FixedDeckSuit::SelectCardSafe()
-{
-	SuitedCard* pCard = (SuitedCard*)select();
-	std::shared_ptr<SuitedCard> p(pCard);
-
-	return p;
-}

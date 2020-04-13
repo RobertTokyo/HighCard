@@ -1,5 +1,4 @@
 ﻿  pch.cpp
-  CardRepository.cpp
   CardUtils.cpp
   FixedDeckSuit.cpp
   HighCardTest.cpp

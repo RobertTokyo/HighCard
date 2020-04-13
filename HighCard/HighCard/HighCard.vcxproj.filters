@@ -24,9 +24,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CardRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HighCardGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,5 +50,10 @@
     <ClInclude Include="CardRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardRepository.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

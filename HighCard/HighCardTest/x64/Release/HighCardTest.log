@@ -1,0 +1,10 @@
+﻿  FixedDeckSuit.cpp
+  TestCard.cpp
+  TestDeck.cpp
+     Creating library D:\MyCode\Striata\HighCard\HighCard\x64\Release\HighCardTest.lib and object D:\MyCode\Striata\HighCard\HighCard\x64\Release\HighCardTest.exp
+  Generating code
+  Finished generating code
+  38 of 450 functions ( 8.4%) were compiled, the rest were copied from previous compilation.
+    10 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  HighCardTest.vcxproj -> D:\MyCode\Striata\HighCard\HighCard\x64\Release\HighCardTest.dll

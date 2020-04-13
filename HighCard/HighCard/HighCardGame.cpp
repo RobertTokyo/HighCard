@@ -88,6 +88,7 @@ player.
 
 int main(int /*argc*/, char /**argv*/)
 {
+	card.SetDeck(new LimitedDeckSuit{ 52 });
 	action CMD = getAction();
 	while (CMD != action::QUIT)
 	{
@@ -97,27 +98,28 @@ int main(int /*argc*/, char /**argv*/)
 			HighCardClassic();
 			break;
 		case action::CAN_TIE:
-			void PlaySuitPrecedence();
+			PlaySuitPrecedence();
 			break;
 		case action::DECK_VARYSIZE:
-			void PlayVarDecks();
+			PlayVarDecks();
 			break;
 		case action::MULTI_DECK:
-			void PlayMultiDecks();
+			PlayMultiDecks();
 			break;
 		case action::NO_TIES:
-			void PlayCanNeverTie();
+			PlayCanNeverTie();
 			break;
 		case action::SUIT_ORDER:
-			void PlaySuitPrecedence();
+			PlaySuitPrecedence();
 			break;
 		case action::WITH_WILDCARD:
-			void PlayWithWildcard();
+			PlayWithWildcard();
 			break;
 		default:
 			std::cout << "UNKNOWN CMD" << std::endl;
 			break;
 		}
+		CMD = getAction();
 	}
 
 	return 0;
@@ -179,6 +181,8 @@ void PlayMultiDecks()
 		std::cout << "voided game\n";
 		break;
 	}
+	deck1->reset();
+	deck2->reset();
 }
 
 void PlayCanNeverTie()
@@ -201,6 +205,7 @@ void PlayCanNeverTie()
 		std::cout << "voided game\n";
 		break;
 	}
+	deck1->reset();
 }
 
 void PlayWithWildcard()
@@ -227,6 +232,7 @@ void PlayWithWildcard()
 		std::cout << "voided game\n";
 		break;
 	}
+	deck->reset();
 }
 
 void PlayVarDecks()

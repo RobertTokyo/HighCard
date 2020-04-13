@@ -1,7 +1,7 @@
 #pragma once
 #include "Deck.h"
 
-class FixedDeckSuit : public Deck
+class FixedDeckSuit : public DeckSuit
 {
 public:
 	FixedDeckSuit(size_t count, bool suits = true)
@@ -12,9 +12,7 @@ public:
 
 	virtual ~FixedDeckSuit();
 
-	virtual Card* select();
-
-	virtual std::shared_ptr<SuitedCard> SelectCardSafe();
+	virtual Card* selectRaw();
 
 protected:
 	size_t CardCount;

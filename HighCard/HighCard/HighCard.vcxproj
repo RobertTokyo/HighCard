@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CardRepository.cpp" />
     <ClCompile Include="CardUtils.cpp" />
     <ClCompile Include="HighCard.cpp" />
     <ClCompile Include="HighCardGame.cpp" />
@@ -170,6 +169,9 @@
     <ClInclude Include="Deck.h" />
     <ClInclude Include="HighCard.h" />
     <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardRepository.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

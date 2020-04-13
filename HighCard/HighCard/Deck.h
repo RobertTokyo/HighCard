@@ -1,5 +1,6 @@
 #pragma once
 #include "Card.h"
+#include <iostream>
 #include <map>
 #include <list>
 #include <array>
@@ -18,7 +19,15 @@ public:
 			delete wildcard;
 	};
 
-	virtual Card* select() = 0;
+	virtual Card* selectRaw() = 0;
+
+	virtual std::shared_ptr<Card> Select()
+	{
+		Card* pCard = selectRaw();
+		std::shared_ptr<Card> p(pCard);
+
+		return p;
+	}
 	
 	virtual bool isWildCard(Card* card)
 	{
@@ -51,18 +60,10 @@ public:
 	UnlimitedDeckNoSuit() {};
 	virtual ~UnlimitedDeckNoSuit() {};
 
-	virtual Card* select()
+	virtual Card* selectRaw()
 	{
 		size_t cardvalue = rand() % 52 + 1;
 		return new Card{ cardvalue };
-	}
-
-	virtual std::unique_ptr<Card> SelectCardSafe()
-	{
-		Card* pCard = select();
-		std::unique_ptr<Card> p(pCard);
-
-		return p;
 	}
 };
 
@@ -75,29 +76,21 @@ public:
 	{};
 	virtual ~LimitedDeckNoSuit() {};
 
-	// This can return a nullptr if we've used the cards
-	virtual Card* select()
+	virtual std::shared_ptr<Card> Select()
 	{
-		Card* card = nullptr;
+		Card* pCard = selectRaw();
+		std::shared_ptr<Card> p(pCard);
 		if (UsedCards.Count() < deck_size)
 		{
-			Card* card = UnlimitedDeckNoSuit::select();
+			Card* card = UnlimitedDeckNoSuit::selectRaw();
 			while (UsedCards.HasBeenUsed(card))
 			{
 				delete card;
-				card = UnlimitedDeckNoSuit::select();
+				Card* card = UnlimitedDeckNoSuit::selectRaw();
 			}
 			// Adds a raw ptr but doesn't own the card; the game owns the card
-			UsedCards.Add(card);
+			UsedCards.Add(p);
 		}
-		return card;
-	}
-
-	virtual std::shared_ptr<Card> SelectCardShared()
-	{
-		Card* pCard = select();
-		std::shared_ptr<Card> p(pCard);
-
 		return p;
 	}
 
@@ -107,8 +100,8 @@ public:
 	}
 
 protected:
-	size_t			deck_size;
-	CardRepository  UsedCards;
+	size_t						deck_size;
+	CardRepository<std::shared_ptr<Card>>  UsedCards;
 };
 
 
@@ -119,20 +112,12 @@ public:
 	DeckSuit() {};
 	virtual ~DeckSuit() {};
 
-	virtual Card* select()
+	virtual Card* selectRaw()
 	{
 		size_t cardvalue = rand() % 13 + 1;
 		size_t cardsuit = rand() % 4;
 		Suit suit = (Suit)cardsuit;
 		return new SuitedCard{ suit, cardvalue };
-	}
-
-	virtual std::unique_ptr<SuitedCard> SelectCardSafe()
-	{
-		SuitedCard* pCard = (SuitedCard*)select();
-		std::unique_ptr<SuitedCard> p(pCard);
-
-		return p;
 	}
 };
 
@@ -144,36 +129,31 @@ public:
 	{};
 	virtual ~LimitedDeckSuit() {};
 
+	virtual std::shared_ptr<Card> Select()
+	{
+		Card* pCard = selectRaw();
+		std::shared_ptr<Card> p;
+		if (UsedCards.Count() < deck_size)
+		{
+			while (UsedCards.HasBeenUsed(pCard))
+			{
+				delete pCard;
+				pCard = selectRaw();
+			}
+			/*std::cout << "Raw card " << pCard->GetCardValue() << ", suit=" <<
+				(int)((SuitedCard*)pCard)->GetCardSuit() << std::endl;*/
+			p = std::shared_ptr<Card>(pCard);
+			UsedCards.Add(p);
+		}
+		return p;
+	}
+
 	void reset(bool deleter = false)
 	{
 		UsedCards.Reset(deleter);
 	}
 
-	virtual Card* select()
-	{
-		Card* card = nullptr;
-		if (UsedCards.Count() < deck_size)
-		{
-			card = DeckSuit::select();
-			while(UsedCards.HasBeenUsed(card))
-			{
-				delete card;
-				card = DeckSuit::select();
-			}
-			UsedCards.Add(card);
-		}
-		return card;
-	}
-
-	virtual std::shared_ptr<SuitedCard> SelectCardShared()
-	{
-		SuitedCard* pCard = (SuitedCard*)select();
-		std::shared_ptr<SuitedCard> p(pCard);
-
-		return p;
-	}
-
 protected:
-	CardRepository		UsedCards;
+	CardRepository<std::shared_ptr<Card>>		UsedCards;
 	size_t				deck_size;
 };

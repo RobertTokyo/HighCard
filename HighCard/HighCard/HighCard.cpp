@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Deck.h"
 #include "HighCard.h"
+#include "CardRepository.inl"
 
 void HighCard::Reset()
 {
@@ -28,6 +29,17 @@ LimitedDeckSuit* HighCard::getFirstDeck()
 	return pDeck;
 }
 
+std::shared_ptr<Card> HighCard::getCardAlways(LimitedDeckSuit* pDeck)
+{
+	auto res = pDeck->Select();
+	if (res.get() == nullptr)
+	{
+		pDeck->reset();
+		res = pDeck->Select();
+	}
+	return res;
+}
+
 // This was the original game
 bool HighCard::Play()
 {
@@ -36,22 +48,26 @@ bool HighCard::Play()
 	int j = rand() % 52 + 1; */
 	LimitedDeckSuit* pDeck = ((LimitedDeckSuit*)getFirstDeck());
 
-	auto p1 = pDeck->SelectCardSafe();
-	auto p2 = pDeck->SelectCardSafe();
+	auto p1 = getCardAlways(pDeck);
+	auto p2 = getCardAlways(pDeck);
+
+	// This deck saves cards - just reset the deck
+	pDeck->reset();
 	/* Compare cards
 	return (i < j);
 	*/
-	int comp = p1->compare(*p2);
+	Card* pCard = p2.get();
+	int comp = p1->compare(*pCard);
 	return comp > 0;
 }
 
 // Task 1. Support ties when the face value of the cards are the same.
 HighCardRes HighCard::PlayCanTie()
 {
-	Deck* pDeck = getFirstDeck();
+	LimitedDeckSuit* pDeck = getFirstDeck();
 
-	auto p1 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
-	auto p2 = ((UnlimitedDeckNoSuit*)pDeck)->SelectCardSafe();
+	auto p1 = getCardAlways(pDeck);
+	auto p2 = getCardAlways(pDeck);
 	int comp = p1->compare(*p2);
 	HighCardRes res{ HighCardRes::Lose };
 	if (comp == 0)
@@ -65,9 +81,9 @@ HighCardRes HighCard::PlayCanTie()
 // suits precedence.
 HighCardRes HighCard::PlaySuitPrecedence()
 {
-	LimitedDeckSuit* pDeck = ((LimitedDeckSuit*)getFirstDeck());
-	auto p1 = pDeck->SelectCardSafe();
-	auto p2 = pDeck->SelectCardSafe();
+	LimitedDeckSuit* pDeck = getFirstDeck();
+	auto p1 = getCardAlways(pDeck);
+	auto p2 = getCardAlways(pDeck);
 	int comp = p1->compare(*p2);
 
 	HighCardRes res{ HighCardRes::Lose };
@@ -88,9 +104,9 @@ HighCardRes HighCard::PlayMultiDecks()
 	if (nDecks > 0)
 	{
 		int DeckIndex = rand() % nDecks;
-		auto card1 = mpDecks[DeckIndex]->SelectCardSafe();
+		auto card1 = mpDecks[DeckIndex]->Select();
 		DeckIndex = rand() % nDecks;
-		auto card2 = mpDecks[DeckIndex]->SelectCardSafe();
+		auto card2 = mpDecks[DeckIndex]->Select();
 
 		int comp = card1->compare(*card2);
 
@@ -109,17 +125,12 @@ HighCardRes HighCard::PlayMultiDecks()
 */
 HighCardRes HighCard::PlayCanNeverTie()
 {
-	LimitedDeckSuit* pDeck = ((LimitedDeckSuit*)getFirstDeck());
+	LimitedDeckSuit* pDeck = (LimitedDeckSuit*)getFirstDeck();
 	int comp{ 0 };
 	do {
-		auto p1 = pDeck->SelectCardSafe();
-		auto p2 = pDeck->SelectCardSafe();
-		if(p1.get()!=nullptr && p2.get()!=nullptr)
-			comp = p1->compare(*p2);
-		else
-		{
-			pDeck->reset();
-		}
+		auto p1 = getCardAlways(pDeck);
+		auto p2 = getCardAlways(pDeck);
+		comp = p1->compare(*p2);
 	} while (comp == 0);
 
 	HighCardRes res{ HighCardRes::Lose };
