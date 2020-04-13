@@ -6,6 +6,7 @@
 #include "Deck.h"
 #include "HighCard.h"
 #include "CardRepository.inl"
+#include "LimitedCardDeck.h"
 
 void HighCard::Reset()
 {
@@ -156,7 +157,51 @@ HighCardRes HighCard::PlayWithWildcard()
 // Created a deck with 20 cards on initialisation, so same as base game
 HighCardRes HighCard::PlayVarDecks()
 {
-	HighCardRes res = PlaySuitPrecedence();
+	HighCardRes res{ HighCardRes::Lose };
+	LimitedCardDeck* pDeck = ((LimitedCardDeck*)getFirstDeck());
+	
+	do {
+		auto p1 = pDeck->Select();
+		auto p2 = pDeck->Select();
+		HighCardRes res{ HighCardRes::Voided };
+		if (p1.get() && p2.get()) { // got 2 cards ?
+			int comp = p1->compare(*p2); // Compare them
+			if (comp < 0)
+				res = HighCardRes::Lose;
+			else if (comp == 0)
+				res = HighCardRes::Draw;
+			else if (comp > 0)
+				res = HighCardRes::Win;
+			p1.reset();
+			p2.reset();
+		}
+		switch (res)
+		{
+		case HighCardRes::Draw:
+			std::cout << "draw\n";
+			break;
+		case HighCardRes::Lose:
+			std::cout << "lose\n";
+			break;
+		case HighCardRes::Win:
+			std::cout << "win\n";
+			break;
+		case HighCardRes::Voided:
+			std::cout << "Game over\n";
+			break;
+		}
+		if (res != HighCardRes::Voided)
+		{
+			std::cout << "Play again ? (Y/N)";
+			char resp;
+			std::cin >> resp;
+			if (resp == 'n' || resp == 'N')
+				break;
+		}
+		else
+			break;
+
+	} while (1);
 	return res;
 }
 

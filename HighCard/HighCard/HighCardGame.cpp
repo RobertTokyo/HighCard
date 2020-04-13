@@ -3,6 +3,7 @@
 #include "HighCard.h"
 #include "Deck.h"
 #include "Card.h"
+#include "LimitedCardDeck.h"
 
 void HighCardClassic();
 void PlaySuitPrecedence();
@@ -237,25 +238,9 @@ void PlayWithWildcard()
 
 void PlayVarDecks()
 {
-	LimitedDeckSuit* deck = new LimitedDeckSuit{ 20 };
+	LimitedCardDeck* deck = new LimitedCardDeck{ 20 };
 	card.SetDeck(deck);
-
-	HighCardRes res = card.PlayVarDecks();
-	switch (res)
-	{
-	case HighCardRes::Draw:
-		std::cout << "draw\n";
-		break;
-	case HighCardRes::Lose:
-		std::cout << "lose\n";
-		break;
-	case HighCardRes::Win:
-		std::cout << "win\n";
-		break;
-	case HighCardRes::Voided:
-		std::cout << "voided game\n";
-		break;
-	}
+	card.PlayVarDecks();
 }
 
 // End of file

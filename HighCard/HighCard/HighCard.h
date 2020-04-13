@@ -33,6 +33,7 @@ public:
 	void AddDeck(LimitedDeckSuit* deck) { mpDecks.push_back(deck); }
 
 protected:
+	
 	std::shared_ptr<Card>			getCardAlways(LimitedDeckSuit* pDeck);
 
 	LimitedDeckSuit*				getFirstDeck();
